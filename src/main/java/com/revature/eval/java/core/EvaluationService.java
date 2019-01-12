@@ -1,18 +1,26 @@
 package com.revature.eval.java.core;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.Year;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalField;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
 public class EvaluationService {
-
+	
 	/**
 	 * 1. Without using the StringBuilder or StringBuffer class, write a method that
 	 * reverses a String. Example: reverse("example"); -> "elpmaxe"
@@ -596,7 +604,7 @@ public class EvaluationService {
 	 *
 	 */
 	static class AtbashCipher {
-
+		int a = 1_000_000;
 		/**
 		 * Question 13
 		 * 
@@ -768,8 +776,21 @@ public class EvaluationService {
 	 * @return
 	 */
 	public Temporal getGigasecondDate(Temporal given) {
+		//Year, Month, Day, Hour, Minute, Second
+		LocalDateTime time = LocalDateTime.of(1,Month.JANUARY,1,0,0,0);
+		time = time.withYear(given.get(ChronoField.YEAR));
+		time = time.withMonth(given.get(ChronoField.MONTH_OF_YEAR));
+		time = time.withDayOfMonth(given.get(ChronoField.DAY_OF_MONTH));
+		try {
+			
+			time = time.withHour(given.get(ChronoField.HOUR_OF_DAY));
+			time = time.withMinute(given.get(ChronoField.MINUTE_OF_HOUR));
+			time = time.withSecond(given.get(ChronoField.SECOND_OF_MINUTE));
+	
+		} catch (Exception e) {
+		}
 		
-		return given;
+		return time.plusSeconds(1_000_000_000);
 	}
 
 	/**
@@ -890,25 +911,33 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int solveWordProblem(String string) {
-		// TODO Write an implementation for this method declaration
-		String [] stringSplit = string.split(" ");
+		String noQ = string.replaceAll("\\?","");
 		ArrayList<Integer> nums = new ArrayList<Integer>();
-			for (String element : stringSplit) {
-				if (element.matches("-?\\d+(\\.\\d+)?")) {
-					nums.add(Integer.parseInt(element));
-				}
+		List<String> stringSplit = Arrays.asList(noQ.split(" "));
+		int i = 0;
+		while (i < stringSplit.size()) {
+			System.out.println(stringSplit.get(i));
+			int tmp = 0;
+			try {
+				tmp = Integer.parseInt(stringSplit.get(i));
+				nums.add(tmp);
+				i++;
+			}catch (Exception e) {
+				i++;
 			}
-			if (string.contains("plus")) {
-				return nums.get(0)+nums.get(1);
+		}
+			if (string.contains("multiplied")) {
+				return (int) (nums.get(0)*nums.get(1));
 			}
-			else if (string.contains("minus")) {
-				return nums.get(0)-nums.get(1);
+			else if (noQ.contains("divided")) {
+				return (int) (nums.get(0)/nums.get(1));
 			}
-			else if (string.contains("multiplied")) {
-				return nums.get(0)*nums.get(1);
+			else if (noQ.contains("minus")) {
+				return (int) (nums.get(0)-nums.get(1));
 			}
 			else {
-				return nums.get(0)/nums.get(1);
-			}
+				return (int) (nums.get(0)+nums.get(1));
+			}		
 	}
+			
 }
