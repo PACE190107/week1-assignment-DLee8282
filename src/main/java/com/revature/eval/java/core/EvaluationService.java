@@ -1,19 +1,11 @@
 package com.revature.eval.java.core;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.time.Year;
 import java.time.temporal.ChronoField;
-import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
-import java.time.temporal.TemporalAccessor;
-import java.time.temporal.TemporalField;
-import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -29,10 +21,13 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String reverse(String string) {
+		//Creates new char with same length as string
 		char[] reversed = new char[string.length()];
+		//switches characters at specified index
 		for (int i = reversed.length - 1, j=0; i >= 0; i--, j++) {
 			reversed[j] = string.charAt(i);
 		}
+		//Returns new String object of reversed
 		return new String(reversed);
 	}
 
@@ -47,10 +42,13 @@ public class EvaluationService {
 	public String acronym(String phrase) {
 		//Split phrase into spaces and dashes
 		String [] splitPhrase = phrase.split(" |-");
+		//Create empty string object
 		String newString = new String("");
 		for (String element : splitPhrase) {
+			//Concatenate the acronym
 			newString = newString.concat(element.substring(0,1).toUpperCase());
 		}
+		//Return 
 		return newString;
 	}
 
@@ -104,6 +102,7 @@ public class EvaluationService {
 		}
 
 		public boolean isEquilateral() {
+			//If all sides are equal
 			if (sideOne == sideTwo && sideTwo == sideThree) {
 				return true;
 			}
@@ -111,7 +110,9 @@ public class EvaluationService {
 		}
 
 		public boolean isIsosceles() {
+			//Initialize a counter variable
 			int comp = 0;
+			//If a side equals another, add to counter
 			if(sideOne == sideTwo) {
 				comp++;
 			}
@@ -121,14 +122,16 @@ public class EvaluationService {
 			if (sideOne == sideThree) {
 				comp++;
 			}
-			System.out.println(comp);
+			//If ONLY one side is equal, return true
 			if (comp == 1) {
 				return true;
 			}
+			//else return false
 			return false;
 		}
 
 		public boolean isScalene() {
+			//No sides are equal
 			if (sideOne != sideTwo && sideTwo != sideThree && sideThree != sideOne) {
 				return true;
 			}
@@ -153,9 +156,10 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getScrabbleScore(String string) {
-
+		//Scoring  variable
 		int score = 0;
 		String lowercaseString = string.toLowerCase(); 
+		//Switch statements to add to score.
 		for (int i = 0; i < string.length(); i++) {
 			switch (lowercaseString.charAt(i)) {
 				case 'a':
@@ -168,35 +172,35 @@ public class EvaluationService {
 				case 'r':
 				case 's':
 				case 't':
-					score++;
+					score++; //Add 1
 					break;
 				case 'd':
 				case 'g':
-					score+=2;
+					score+=2; //Add 2
 					break;
 				case 'b':
 				case 'c':
 				case 'm':
 				case 'p': 
-					score+=3;
+					score+=3; //Add 3
 					break;
 				case 'f':
 				case 'h':
 				case 'v':
 				case 'w':
 				case 'y':
-					score+=4;
+					score+=4; //Add 4
 					break;
 				case 'k': 
-					score +=5;
+					score +=5; //Add 5
 					break;
 				case 'j':
 				case 'x':
-					score += 8;
+					score += 8; //Add 8
 					break;
 				case 'q':
 				case 'z':
-					score +=10;
+					score +=10; //Add 10
 					break;
 			}
 		}
@@ -237,22 +241,23 @@ public class EvaluationService {
 	public String cleanPhoneNumber(String string) throws IllegalArgumentException {
 		String new_num = "";
 		
-		//clean up phone number
+		//clean up phone number, if character is number, concat it.
 		for (int i = 0; i < string.length(); i++) {
 			if (Character.isDigit(string.charAt(i))) {
 				new_num = new_num.concat(Character.toString(string.charAt(i)));
 			}
 		}
-		
+		//Contains the +1 code, remove it
 		if (new_num.length() == 11) {
 			if (new_num.charAt(0) == '1') {
 				new_num = new_num.substring(1);
 			}
 		}
+		//Illegal length (covers both characters in number and excess numbers
 		else if (new_num.length() > 11 || new_num.length() < 10) {
 			throw new IllegalArgumentException("Enter a valid phone number.");
 		}
-		
+		//If the first character or 4th character is a 1, then number is invalid
 		if ((Character.getNumericValue(new_num.charAt(0)) < 2) || 
 		   (Character.getNumericValue(new_num.charAt(3)) < 2)) {
 			return "Invalid";
@@ -271,9 +276,9 @@ public class EvaluationService {
 	 */
 	public Map<String, Integer> wordCount(String string) {
 		Map <String, Integer> countWords = new HashMap<String,Integer>();
-		
+		//Removes spaces, commas, and new lines from the string
 		String[] stringSplit = string.split(" |,|\n");
-		
+		//If the element is in the HashMap, then add 1, else add a new key.
 		for (String element : stringSplit) {
 			if (countWords.containsKey(element)) {
 				int count = countWords.get(element);
@@ -324,11 +329,16 @@ public class EvaluationService {
 	static class BinarySearch<T extends Comparable<T>> {
 		private List<T> sortedList;
 		public int indexOf(T t) {
+			//Low and high variable of the Generic type
 			int low = 0;
 			int high = sortedList.size()-1; 
 			while (low <= high) {	
 				int index = (low + high)/2;
 				T comp = sortedList.get(index);
+				//Compare to method compares two objects, if 
+				// s1.compareTo(s2) is > 1, then s1 < s2
+				// s1.compareTo(s2) is < 1. then s1 > s2
+				// s1.compareTo(s2) is 0, then s1 == s2
 				if (t.compareTo(comp) > 0) {
 					 low = index + 1;
 				}
@@ -339,6 +349,7 @@ public class EvaluationService {
 					return index;
 				}
 			}
+			//The object is not found in the List
 			System.out.println("Not found");
 			return -1;
 		}
@@ -377,11 +388,13 @@ public class EvaluationService {
 	 */
 	public String toPigLatin(String string) {
 		ArrayList<Character> vowels = new ArrayList<Character>();
+		//Adds vowels to an arrayList
 		vowels.add('a');
 		vowels.add('e');
 		vowels.add('i');
 		vowels.add('o');
 		vowels.add('u');	
+		//String array with no spaces
 		String [] stringSplit = string.split(" ");
 		String newString = "";
 		for (int i = 0; i < stringSplit.length; i++) {
@@ -437,13 +450,19 @@ public class EvaluationService {
 	 */
 	public boolean isArmstrongNumber(int input) {
 		String string = Integer.toString(input);
+		//The length of the string is where you start the exponent
 		int pow = string.length();
+		//sum
 		int sum = 0;
+		//temp integer
 		int temp = input;
 		for (int i = 0; i < string.length(); i++) {
+			//Get (temp%10)^pow
 			sum += (int) Math.pow(temp % 10, pow);
+			//Divide temp by 10 to get new number
 			temp /= 10;
 		}
+		//If the sum is the same as input, its armstrong number
 		if (sum == input) {
 			return true;
 		}
@@ -462,17 +481,22 @@ public class EvaluationService {
 	 */
 	public List<Long> calculatePrimeFactorsOf(long l) {
 		List<Long> prime_factors = new ArrayList<Long>();
+		//First prime number
 		long factor = 2;
+		//Set parameter l to true_num
 		long tru_num = l;
 		while (l !=1) {
+			//If (long l) mod the factor equals 0, it is a prime factor
 			if (l % factor == 0) {
 				l /= factor;
 				prime_factors.add(factor);
 			}
+			//Increase factor till mod equals 0
 			else {
 				factor++;
 			}
 		}
+		//The number is prime if the factor is long l.
 		if (factor == tru_num) {
 			System.out.println("The number is prime.");
 		}
@@ -514,7 +538,7 @@ public class EvaluationService {
 		}
 
 		public String rotate(String string) {
-			
+			//Increase the ascii number for each character of the string.
 			for (int i =0; i < key; i++) {
 				String new_string = "";
 				for (int j = 0; j < string.length(); j++) {
@@ -527,7 +551,7 @@ public class EvaluationService {
 						else if (ascii == 91) {
 							ascii = 65;
 						}
-				
+					//Concatenates string
 					new_string =new_string.concat(Character.toString((char) ascii));
 				}
 				string = new_string;
@@ -554,6 +578,7 @@ public class EvaluationService {
 	 */
 	public int calculateNthPrime(int i) throws IllegalArgumentException {
 		if (i <= 0) {
+			//Integer is negative
 			throw new IllegalArgumentException("Integer cannot be less than 1.");
 		}
 		
@@ -562,11 +587,13 @@ public class EvaluationService {
 		int current_prime = 2;
 		while (current_type <= i) {
 			boolean prime = true;
+			//Iterates through each number and mods the current num to parameter
 			for (int j = 2; j <= current_num/2; j++) {
 				if (current_num % j == 0) {
 					prime = false;
 				}
-			}	
+			}
+			//If its true set the current prime equal to the num.
 			if (prime == true) {
 				current_type++;
 				current_prime = current_num;
@@ -604,7 +631,6 @@ public class EvaluationService {
 	 *
 	 */
 	static class AtbashCipher {
-		int a = 1_000_000;
 		/**
 		 * Question 13
 		 * 
@@ -621,8 +647,7 @@ public class EvaluationService {
 				first++;
 				last--;				
 			}
-			//Replace all special characters
-			
+			//Replace all special characters	
 			string = string.replaceAll("[\\.|\\?|\\+|\\*|\\^|\\$|,]", "");
 			String[] stringSplit = string.toLowerCase().split(" ");
 			String encodedCypher = "";
@@ -642,6 +667,7 @@ public class EvaluationService {
 			for (int i = 1; i <= encodedCypher.length(); i++) {
 				returnCypher = returnCypher.concat(
 						Character.toString(encodedCypher.charAt(i-1)));
+			//Separates/adds spaces between the 5 characters in string
 				if ((i % 5) == 0 && i != encodedCypher.length()) {
 					returnCypher = returnCypher.concat(" ");
 				}
@@ -659,6 +685,7 @@ public class EvaluationService {
 		 * @return
 		 */
 		public static String decode(String string) {
+			//Same as encode
 			Hashtable <Character, Character> key = new Hashtable<Character,Character>();
 			char first = 122;
 			char last = 97;
@@ -668,11 +695,13 @@ public class EvaluationService {
 				first--;
 				last++;
 			}
+			//Splits string by spaces
 			String [] stringSplit = string.split(" ");
 			String decodedCypher = "";
 			for (String element : stringSplit) {
 				for (int j = 0;j < element.length(); j++) {
 					if (key.get(element.charAt(j)) != null) {
+						//No need to worry about spaces for words, just concat
 						decodedCypher = decodedCypher.concat(Character.toString(key.get
 								(element.charAt(j))));	
 					}
@@ -711,6 +740,7 @@ public class EvaluationService {
 	public boolean isValidIsbn(String string) {
 		List<Integer> ISBN = new ArrayList<Integer>();
 		for (int i = 0; i < string.length(); i++) {
+			//If it is a number add to a List
 			if (Character.isDigit(string.charAt(i))) {
 				ISBN.add(Character.getNumericValue(string.charAt(i)));
 			}
@@ -719,12 +749,15 @@ public class EvaluationService {
 		int counter = 10;
 		
 		for (int j = 0; j < ISBN.size(); j++) {
+			//Performs the math needed for ISBN
 			check += (ISBN.get(j)*counter);
 			counter--;
 		}
+		//If check % 11 == 0, is valid.
 		if (Math.floorMod(check,11) == 0) {
 			return true;
 		}
+		//X = 10, so check if 10 added and string contains X
 		else if (Math.floorMod(check+10,11) == 0 && string.contains("X")) {
 			return true;
 		}
@@ -745,22 +778,26 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isPangram(String string) {
+		//Get rid of spaces
 		string = string.replaceAll(" ", "");
 		List<Character> alphabet = new ArrayList<Character>();
 		List<Character> stringCheck = new ArrayList<Character>();
+		//Adds alphabet to alphabet list
 		char ascii = 97;
 		for (int i = 0; i < 26; i++) {
 			alphabet.add(ascii);
 			ascii++;
 		}
-	
+		//Lower all characters to prevent null exceptions
 		string = string.toLowerCase();
 		for (int j = 0; j < string.length(); j++) {
 			if (!stringCheck.contains(string.charAt(j))) {
+				//If the character is not in alphabet, add it to stringCheck
 				stringCheck.add(string.charAt(j));
 			}
 			
 		}
+		//if the sizes are the same, then it contains all letters
 		if (alphabet.size() == stringCheck.size()) {
 			return true;
 		}
@@ -776,20 +813,20 @@ public class EvaluationService {
 	 * @return
 	 */
 	public Temporal getGigasecondDate(Temporal given) {
-		//Year, Month, Day, Hour, Minute, Second
+		//Year, Month, Day, Hour, Minute, Second (Paired Programming)
 		LocalDateTime time = LocalDateTime.of(1,Month.JANUARY,1,0,0,0);
 		time = time.withYear(given.get(ChronoField.YEAR));
 		time = time.withMonth(given.get(ChronoField.MONTH_OF_YEAR));
 		time = time.withDayOfMonth(given.get(ChronoField.DAY_OF_MONTH));
 		try {
-			
+			//These parameters may not be specified string
 			time = time.withHour(given.get(ChronoField.HOUR_OF_DAY));
 			time = time.withMinute(given.get(ChronoField.MINUTE_OF_HOUR));
 			time = time.withSecond(given.get(ChronoField.SECOND_OF_MINUTE));
 	
 		} catch (Exception e) {
 		}
-		
+		//Add gigasecond
 		return time.plusSeconds(1_000_000_000);
 	}
 
@@ -812,10 +849,12 @@ public class EvaluationService {
 		for (int j = 0; j < i; j++) {
 			for (int k = 0; k < set.length;k++) {
 				if (j % set[k] == 0) {
+					//Flag is true when it is a multiple
 					flag = true;
 				}
 			}
 			if (flag) {
+				//Adds multiple to sum, resets flag
 				sum += j;
 				flag = false;
 			}
@@ -860,10 +899,12 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isLuhnValid(String string) {
+		//Replace all spaces
 		String noSpace = string.replaceAll(" ", "");
 		int sum = 0;
 		for (int i = 0; i < noSpace.length(); i++) {
 			if (((i+1) % 2) == 0) {
+				//Multiply number by 2, if its greater than 10, subtract 9
 				int temp = 2*Character.getNumericValue(noSpace.charAt(i));
 				if (temp > 9) {
 					sum += temp -9;
@@ -876,7 +917,7 @@ public class EvaluationService {
 				sum += Character.getNumericValue(noSpace.charAt(i));
 			}
 		}
-		System.out.println(sum);
+		//If sum contains no reminder when divided by 10, return true
 		if (sum % 10 == 0) {
 			return true;
 		}
@@ -911,13 +952,15 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int solveWordProblem(String string) {
+		//Replace all ? in the string
 		String noQ = string.replaceAll("\\?","");
 		ArrayList<Integer> nums = new ArrayList<Integer>();
+		//Splits string by spaces
 		List<String> stringSplit = Arrays.asList(noQ.split(" "));
 		int i = 0;
 		while (i < stringSplit.size()) {
-			System.out.println(stringSplit.get(i));
 			int tmp = 0;
+			//Try catch statement adds only numbers, if its not a number, skip it
 			try {
 				tmp = Integer.parseInt(stringSplit.get(i));
 				nums.add(tmp);
@@ -926,6 +969,7 @@ public class EvaluationService {
 				i++;
 			}
 		}
+			//Performs operation based on the text
 			if (string.contains("multiplied")) {
 				return (int) (nums.get(0)*nums.get(1));
 			}
